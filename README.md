@@ -1,6 +1,10 @@
-# Bills
+# Elixir-basic in "Bills management"
 
 **TODO: Add description**
+
+  Just some basics concepts in Elixir (sintaxe, patter macthing, recursion, tests, docs, database, etc...)
+  
+  Always in progress...
 
 ## Installation
 
