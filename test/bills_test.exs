@@ -3,17 +3,21 @@ defmodule BillsTest do
   doctest Bills
 
   test "create bills" do
-    bills = Bills.createbill(["Agua", "Telefone", "Luz"])
-    assert bills  == ["Agua", "Telefone", "Luz"]
+    bills = Bills.createbill(["Agua"], [5])
+    assert bills  == [%Bills.Bill{fatura: "Agua", vencimento: 5}]
   end
 
   test "order array of bills" do
-    bills = Bills.createbill(["Agua", "Telefone", "Luz"])
-    refute Bills.orderbill(bills)  == ["Agua", "Telefone", "Luz"]
+    bills = Bills.createbill(["Luz", "Agua"], [5])
+    refute Bills.orderbill(bills)  == [
+      %Bills.Bill{fatura: "Luz", vencimento: 5},
+      %Bills.Bill{fatura: "Agua", vencimento: 5}
+    ]
   end
 
   test "verify if a bill exit" do
-    assert Bills.existbill(Bills.createbill(["Agua", "Telefone", "Luz"]), "Telefone") == true
+    bills = Bills.createbill(["Telefone", "Luz"], [5,15])
+    assert Bills.existbill(bills, %Bills.Bill{fatura: "Telefone", vencimento: 15}) == true
   end
 
 end

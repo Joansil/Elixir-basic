@@ -5,26 +5,48 @@ defmodule Bills do
   @doc """
     When this function receive `bills`, return an array of bills
       ## Sample
-      iex> Bills.createbill(["Agua", "Telefone", "Luz"], [5,5,15])
-      ["Agua", "Telefone", "Luz"]
+      iex> Bills.createbill(["Agua", "Telefone", "Luz"], [5,15])
+      [
+        %Bills.Bill{fatura: "Agua", vencimento: 5},
+        %Bills.Bill{fatura: "Agua", vencimento: 15},
+        %Bills.Bill{fatura: "Telefone", vencimento: 5},
+        %Bills.Bill{fatura: "Telefone", vencimento: 15},
+        %Bills.Bill{fatura: "Luz", vencimento: 5},
+        %Bills.Bill{fatura: "Luz", vencimento: 15}
+      ]
   """
   def createbill(bills, amount) do
-    for day <- amount, bill <- bills do
-      "Fatura: #{bill} vence dia: #{day}"
+    for bill <- bills, day <- amount do
+      %Bills.Bill{fatura: bill, vencimento: day}
     end
   end
 
-  def paybills(bills, amount, howmany) do
+  @doc """
+    When this function recieve informations to create a bill, we have to order and save in a file.
+      ## Sample
+      iex> Bills.paybills(["Agua", "Telefone", "Luz"], [5,15], 2, "contas outubro")
+      :ok
+  """
+  def paybills(bills, amount, howmany, namearch) do
     createbill(bills, amount)
     |> orderbill
     |> billforpay(howmany)
+    |> savebills(namearch)
   end
+
 
   def billforpay(bills, howmany) do
     Enum.split(bills, howmany)
   end
 
-  def savebills(namearch, bills) do
+  @doc """
+    When recieve the `bills` and `name of archive`, returns a `ok`
+      ## Sample
+      iex> bills = Bills.createbill(["Agua", "Telefone", "Luz"], [5,15])
+      iex> Bills.savebills(bills, "conta novembro")
+      :ok
+  """
+  def savebills(bills, namearch) do
     binary = :erlang.term_to_binary(bills)
     File.write!(namearch, binary)
   end
@@ -41,8 +63,16 @@ defmodule Bills do
   @doc """
     When this funtion receive `bills`, return an orderly array of bills
       ## Sample
-      iex> Bills.orderbill(Bills.createbill(["Agua", "Telefone", "Luz"]))
-      ["Agua", "Luz", "Telefone"]
+      iex> bills = Bills.createbill(["Agua", "Telefone", "Luz"], [5,15])
+      iex> Bills.orderbill(bills)
+      [
+        %Bills.Bill{fatura: "Agua", vencimento: 5},
+        %Bills.Bill{fatura: "Agua", vencimento: 15},
+        %Bills.Bill{fatura: "Luz", vencimento: 5},
+        %Bills.Bill{fatura: "Luz", vencimento: 15},
+        %Bills.Bill{fatura: "Telefone", vencimento: 5},
+        %Bills.Bill{fatura: "Telefone", vencimento: 15}
+      ]
   """
   def orderbill(bills) do
     Enum.sort(bills)
@@ -51,7 +81,8 @@ defmodule Bills do
   @doc """
     When this funtion receive `bills` and a bill element, return if a bill exist
       ## Sample
-      iex> Bills.existbill(Bills.createbill(["Agua", "Telefone", "Luz"]), "Telefone")
+      iex> bills = Bills.createbill(["Agua", "Telefone", "Luz"], [5,15])
+      iex> Bills.existbill(bills, %Bills.Bill{fatura: "Telefone", vencimento: 15})
       true
   """
   def existbill(bills, bill) do
