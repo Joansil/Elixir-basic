@@ -1,8 +1,8 @@
-# Elixir-basic in "Bills management"
+# Elixir-basic in bills management
 
 **TODO: Add description**
 
-  Just some basics concepts in Elixir (sintaxe, patter macthing, recursion, tests, docs, database, etc...)
+  Just some basics concepts in Elixir (sintaxe, patter macthing, recursion, tests, docs, database, etc...), used to personal bills management...
   
   Always in progress...
 
