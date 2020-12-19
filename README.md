@@ -1,4 +1,4 @@
-# Elixir-basic in bills management
+# Basic bills management
 
 **TODO: Add description**
 
